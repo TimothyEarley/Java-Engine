@@ -6,6 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public abstract class Save {
 
@@ -72,4 +78,40 @@ public abstract class Save {
 		return o;
 	}
 
+	public static void saveXML(HashMap<?, ?> map, String fileName) {
+		Properties properties = new Properties();
+		Iterator<?> it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<?, ?> pairs = (Entry<?, ?>) it.next();
+			properties.setProperty(pairs.getKey().toString(), pairs.getValue().toString());
+		}
+
+		try {
+			File file = new File(fileName);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			OutputStream os = new FileOutputStream(file);
+			properties.storeToXML(os, "Keybindings");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static HashMap<Object, Object> loadXML(String fileName) {
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		try {
+			File file = new File(fileName);
+			if (!file.exists())
+				return null;
+			
+			Properties properties = new Properties();
+			properties.loadFromXML(new FileInputStream(file));
+			map.putAll(properties);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return map;
+	}
 }
