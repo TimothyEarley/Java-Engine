@@ -7,7 +7,11 @@ import in.Input;
 import java.awt.Color;
 import java.io.IOException;
 
+import util.Sound;
+
 public class Test extends BasicGame {
+
+	Sound sound;
 
 	public Test(String title) {
 		super(title);
@@ -19,6 +23,7 @@ public class Test extends BasicGame {
 
 	@Override
 	protected void init() throws IOException {
+		sound = new Sound("/beep.wav");
 	}
 
 	@Override
@@ -31,6 +36,8 @@ public class Test extends BasicGame {
 
 	@Override
 	protected void update(Input input) {
+		if (Math.random() > 0.9 )
+			playSound(sound);
 	}
 
 }
