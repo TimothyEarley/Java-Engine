@@ -15,9 +15,11 @@ import util.vectors.Vector2f;
 import util.vectors.Vector2i;
 
 public class GraphicsHelper {
+	
+	public static Font font;
 
 	private Graphics2D g2d;
-
+	
 	private Vector2i offset;
 	private Vector2f stretch;
 
@@ -28,7 +30,7 @@ public class GraphicsHelper {
 			this.g2d = (Graphics2D) bs.getDrawGraphics();
 		this.offset = offset;
 		this.stretch = stretch;
-		this.parent = parent;
+		this.parent = parent;		
 	}
 
 	public GraphicsHelper(Graphics2D g2d) {
@@ -145,7 +147,7 @@ public class GraphicsHelper {
 		float scaleH = transformH(sprite.getHeight()) / sprite.getHeight();
 
 		at.translate(tx, ty);
-		at.rotate(angle, sprite.getWidth()/2, sprite.getHeight()/2);
+		at.rotate(angle, sprite.getWidth() / 2, sprite.getHeight() / 2);
 		at.scale(scaleW, scaleH);
 
 		g2d.drawImage(sprite.getImage(), at, null);
@@ -210,34 +212,72 @@ public class GraphicsHelper {
 	public void fillCircle(int x, int y, int radius) {
 		g2d.fillOval(transformX(x), transformY(y), transformW(radius), transformH(radius));
 	}
+	
+	public void drawStringRight(String string, int x, int y, float height) {
+		drawStringRight(string, x, y, font.deriveFont(height));
+	}
 
 	public void drawStringRight(String string, int x, int y, Font font) {
+		if (string == null || font == null)
+			return;
 		x = transformX(x);
 		y = transformY(y);
-		g2d.setFont(font);
+		g2d.setFont(deriveFont(font));
 		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
 
 		g2d.drawString(string, x, y - height / 2);
 	}
+	
+	public void drawStringLeft(String string, int x, int y, float height) {
+		drawStringLeft(string, x, y, font.deriveFont(height));
+	}
 
 	public void drawStringLeft(String string, int x, int y, Font font) {
+		if (string == null || font == null)
+			return;
 		x = transformX(x);
 		y = transformY(y);
-		g2d.setFont(font);
+		g2d.setFont(deriveFont(font));
 		int lenght = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getWidth();
 		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
 
 		g2d.drawString(string, x - lenght, y - height / 2);
 	}
 
+	public void drawStringCentered(String string, int x, int y, float height) {
+		drawStringCentered(string, x, y, font.deriveFont(height));
+	}
+	
 	public void drawStringCentered(String string, int x, int y, Font font) {
+		if (string == null || font == null)
+			return;
 		x = transformX(x);
 		y = transformY(y);
-		g2d.setFont(font);
+		g2d.setFont(deriveFont(font));
 		int lenght = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getWidth();
 		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
 
 		g2d.drawString(string, x - lenght / 2, y - height / 2);
+	}
+	
+	public void drawStringCenteredTop(String string, int x, int y, float height) {
+		drawStringCenteredTop(string, x, y, font.deriveFont(height));
+	}
+	
+	public void drawStringCenteredTop(String string, int x, int y, Font font) {
+		if (string == null || font == null)
+			return;
+		x = transformX(x);
+		y = transformY(y);
+		g2d.setFont(deriveFont(font));
+		int lenght = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getWidth();
+		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
+
+		g2d.drawString(string, x - lenght / 2, y + height/2);
+	}
+
+	private Font deriveFont(Font font) {
+		return font.deriveFont((float) transformH(font.getSize()));
 	}
 
 	public void fillPolygon(Polygon poly) {

@@ -33,7 +33,7 @@ public class Display extends JFrame {
 	public GraphicsHelper gh;
 
 	boolean isApplet;
-
+	
 	/**
 	 * Pseudo screen for applet
 	 * 

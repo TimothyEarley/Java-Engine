@@ -8,6 +8,7 @@ import in.Input;
 import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -45,9 +46,9 @@ public abstract class BasicGame implements Runnable {
 		this.applet = applet;
 		setUpApplet(width, height);
 		isApplet = true;
-		//Pseudo display
+		// Pseudo display
 		display = new Display(width, height);
-		
+
 		run = new Thread(this, "run");
 		running = false;
 		ups = 30;
@@ -141,8 +142,7 @@ public abstract class BasicGame implements Runnable {
 	private void render() {
 		if (isApplet) {
 			applet.repaint();
-		}
-		else if (input.hasFocus()) {
+		} else if (input.hasFocus()) {
 			display.render(this);
 		}
 	}
@@ -159,7 +159,7 @@ public abstract class BasicGame implements Runnable {
 
 	public Vector2i mouseToScreen(Vector2i v) {
 		if (!isApplet) {
-		return display.mouseToScreen(v);
+			return display.mouseToScreen(v);
 		} else {
 			return v;
 		}
@@ -183,7 +183,7 @@ public abstract class BasicGame implements Runnable {
 	public int getHeight() {
 		return display.size.y;
 	}
-	
+
 	public Color getBackground() {
 		if (!isApplet) {
 			return Display.backgroundColor;
@@ -191,7 +191,7 @@ public abstract class BasicGame implements Runnable {
 			return applet.getBackground();
 		}
 	}
-	
+
 	public void setBackground(Color color) {
 		if (!isApplet) {
 			Display.backgroundColor = color;
@@ -199,7 +199,7 @@ public abstract class BasicGame implements Runnable {
 			applet.setBackground(color);
 		}
 	}
-	
+
 	public void playSound(Sound sound) {
 		if (sound == null)
 			return;
@@ -207,5 +207,19 @@ public abstract class BasicGame implements Runnable {
 			sound.start(applet);
 		else
 			sound.start();
+	}
+
+	public void setFont(String name, int style, int size) {
+		GraphicsHelper.font = new Font(name, style, size);
+	}
+
+	public void loadFont(String path, int style, int size) {
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BasicGame.class.getResourceAsStream(path));
+			font = font.deriveFont(style, size);
+			GraphicsHelper.font = font;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
