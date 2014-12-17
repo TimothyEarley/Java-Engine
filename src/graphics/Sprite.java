@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -11,14 +12,40 @@ import util.Crash;
 
 public class Sprite {
 
-	BufferedImage image;
+	public static boolean deferred = false;
 
+	private static ArrayList<Sprite> toLoad = new ArrayList<Sprite>();
+
+	BufferedImage image;
+	String res;
+
+	/**
+	 * @return sprite loaded
+	 */
+	public static Sprite loadNext() {
+		if (toLoad.size() <= 0)
+			return null;
+
+		Sprite s = toLoad.remove(0);
+		s.load();
+		return s;
+	}
+
+	public static int leftToLoad() {
+		return toLoad.size();
+	}
+
+	/**
+	 * @param res
+	 *            in the form: "/..."
+	 */
 	public Sprite(String res) {
-		try {
-			image = ImageIO.read(Sprite.class.getResource(res));
-		} catch (Exception e) {
-			Crash.crash(e, "Failed to load image: " + res);
-		}
+		this.res = res;
+		if (deferred)
+			toLoad.add(this);
+		else
+			load();
+
 	}
 
 	public Sprite(BufferedImage bufferedImage) {
@@ -34,12 +61,22 @@ public class Sprite {
 		}
 	}
 
+	public void load() {
+		if (image != null)
+			return;
+		try {
+			image = ImageIO.read(Sprite.class.getResource(res));
+		} catch (Exception e) {
+			Crash.crash(e, "Failed to load image: " + res);
+		}
+	}
+
 	public Sprite getScaledSprite(int newWidth, int newHeight) {
 		return new Sprite(this.getScaled(newWidth, newHeight));
 	}
 
 	public BufferedImage getScaled(float scale) {
-		return getScaled((int) (image.getWidth() * scale), (int) (image.getHeight() * scale));
+		return getScaled((int) (getImage().getWidth() * scale), (int) (getImage().getHeight() * scale));
 	}
 
 	/**
@@ -53,12 +90,9 @@ public class Sprite {
 	 * @return
 	 */
 	public BufferedImage getScaled(int newWidth, int newHeight) {
-		// return image.getScaledInstance(width, height, hints);
-		BufferedImage resized = new BufferedImage(newWidth, newHeight, image.getType());
+		BufferedImage resized = new BufferedImage(newWidth, newHeight, getImage().getType());
 		Graphics2D g = resized.createGraphics();
-		// g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(image, 0, 0, newWidth, newHeight, 0, 0, image.getWidth(), image.getHeight(), null);
+		g.drawImage(image, 0, 0, newWidth, newHeight, 0, 0, getImage().getWidth(), getImage().getHeight(), null);
 		g.dispose();
 		return resized;
 	}
@@ -113,9 +147,10 @@ public class Sprite {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * With alpha
+	 * 
 	 * @param searchFor
 	 * @param replaceWith
 	 * @return
@@ -126,7 +161,7 @@ public class Sprite {
 				int argb = getImage().getRGB(x, y);
 
 				if (argb == searchFor)
-				this.getImage().setRGB(x, y, replaceWith);
+					this.getImage().setRGB(x, y, replaceWith);
 			}
 		}
 		return this;
@@ -137,15 +172,20 @@ public class Sprite {
 	}
 
 	public BufferedImage getImage() {
+		load();
 		return image;
 	}
 
 	public int getWidth() {
-		return image.getWidth();
+		return getImage().getWidth();
 	}
 
 	public int getHeight() {
-		return image.getHeight();
+		return getImage().getHeight();
+	}
+	
+	public String getPath() {
+		return res;
 	}
 
 	private static BufferedImage deepCopy(BufferedImage bi) {
