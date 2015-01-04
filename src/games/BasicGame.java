@@ -29,7 +29,7 @@ public abstract class BasicGame implements Runnable {
 
 	boolean running, isApplet;
 
-	double ups;
+	public double ups;
 
 	long time, delta;
 
