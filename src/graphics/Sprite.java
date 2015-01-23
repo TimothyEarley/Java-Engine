@@ -90,6 +90,9 @@ public class Sprite {
 	 * @return
 	 */
 	public BufferedImage getScaled(int newWidth, int newHeight) {
+		if (newWidth == 0 || newHeight == 0) {
+			return null;
+		}
 		BufferedImage resized = new BufferedImage(newWidth, newHeight, getImage().getType());
 		Graphics2D g = resized.createGraphics();
 		g.drawImage(image, 0, 0, newWidth, newHeight, 0, 0, getImage().getWidth(), getImage().getHeight(), null);
