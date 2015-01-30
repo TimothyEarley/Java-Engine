@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 import timmy.engine.graphics.Sprite;
 import timmy.engine.util.vectors.Vector2f;
@@ -23,13 +24,13 @@ public class GraphicsHelper {
 	private Vector2f stretch;
 
 	private Display parent;
-
+	
 	public GraphicsHelper(BufferStrategy bs, Vector2i offset, Vector2f stretch, Display parent) {
 		if (bs != null)
 			this.g2d = (Graphics2D) bs.getDrawGraphics();
 		this.offset = offset;
 		this.stretch = stretch;
-		this.parent = parent;		
+		this.parent = parent;	
 	}
 
 	public GraphicsHelper(Graphics2D g2d) {
@@ -164,6 +165,19 @@ public class GraphicsHelper {
 		at.translate(-oldX, -oldY);
 		at.translate(transformX(oldX), transformY(oldY));
 		g2d.drawImage(sprite.getImage(), at, null);
+	}
+	
+	public void drawImage(BufferedImage image) {	
+		drawImage(image, 0, 0);
+	}
+
+
+	public void drawImage(BufferedImage image, int x, int y) {	
+		drawImage(image, x, y, image.getWidth(), image.getHeight());
+	}
+	
+	public void drawImage(BufferedImage image, int x, int y, int w, int h) {	
+		g2d.drawImage(image, transformX(x), transformY(y), transformW(w), transformH(h), null);
 	}
 
 	public void fillRect(Vector2i coords, int width, int height) {

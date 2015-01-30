@@ -106,9 +106,19 @@ public abstract class BasicGame implements Runnable {
 		time = System.currentTimeMillis();
 		int ticks = 0;
 		int frames = 0;
+
+		int frameCounter = 0;
+		int tickCounter = 0;
+		long deltaCounter = 0;
+
+		long oldDelta = 0;
 		while (running) {
 			// System.out.println(delta + ", " + getTicks());
-			addDelta();
+			oldDelta = delta;
+			while (delta == oldDelta) {
+				addDelta();
+			}
+			deltaCounter += delta - oldDelta;
 			while (ticks < getTicks()) {
 				addDelta();
 				tryUpdate(input);
@@ -117,6 +127,13 @@ public abstract class BasicGame implements Runnable {
 			if (frames <= ticks) {
 				render();
 				frames++;
+			}
+			// debug
+			if (deltaCounter >= 1000) {
+				deltaCounter = 0;
+				display.setTitle("FPS: " + (frames - frameCounter) + ", UPS: " + (ticks - tickCounter) + " (frames: " + frames + ", ticks: " + ticks + ")");
+				frameCounter = frames;
+				tickCounter = ticks;
 			}
 		}
 	}

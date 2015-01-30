@@ -198,4 +198,12 @@ public class Sprite {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
+	public int getRGB(int x, int y) {
+		return image.getRGB(x, y);
+	}
+
+	public int[] getPixels() {
+		return image.getRGB(0, 0, getWidth(), getHeight(), null, 0, getWidth());
+	}
+
 }
