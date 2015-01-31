@@ -37,8 +37,8 @@ public class FadeOut extends Transition {
 	}
 
 	@Override
-	public boolean update(Input input) {
-		now++;
+	public boolean update(Input input, int delta) {
+		now+=delta;
 		if (now >= totalSteps) {
 			reset();
 			return true;

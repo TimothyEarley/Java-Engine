@@ -4,8 +4,19 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Animation extends Sprite {
+	
+	/**
+	 * keep track of all anims
+	 */
+	private static ArrayList<Animation> anims = new ArrayList<Animation>();
+	
+	public static void tickAll() {
+		for (Animation animation : anims) {
+			animation.tick();
+		}
+	}
 
-	private ArrayList<Sprite> frames;
+	private Sprite[] frames;
 
 	private int currentFrame, tick, ticksPerFrame;
 
@@ -13,43 +24,54 @@ public class Animation extends Sprite {
 
 		super(ref);
 
-		this.ticksPerFrame = ticksPerFrame;
 		
-		frames = new ArrayList<Sprite>();
+		Sprite[] frames = new Sprite[image.getWidth() / width * image.getHeight() * height];
 
 		for (int x = 0; x < image.getWidth(); x += width) {
 			for (int y = 0; y < image.getHeight(); y += height) {
-				frames.add(new Sprite(image.getSubimage(x, y, width, height)));
+				frames[x + y * width] = new Sprite(image.getSubimage(x, y, width, height));
 			}
-		}
+		} 
+		
+		setup(frames, ticksPerFrame);
 
 	}
+	
+	public Animation(Sprite ... frames) {
+		this(20, frames);
+	}
 
-	public Animation(ArrayList<Sprite> frames) {
-		super(1, 1, 0);
-		this.frames = frames;
+	public Animation(int ticksPerFrame, Sprite ... frames) {
+		super();
+		setup(frames, ticksPerFrame);
+	}
+
+	private void setup(Sprite[] frames, int ticksPerFrame) {
+		this.ticksPerFrame = ticksPerFrame;
+		this.frames = frames;	
+		anims.add(this);
 	}
 
 	@Override
 	public BufferedImage getImage() {
-		if (frames.size() == 0)
+		if (frames.length == 0)
 			return image;
-		return frames.get(currentFrame).getImage();
+		return frames[currentFrame].getImage();
 	}
 
 	@Override
 	public int getWidth() {
-		if (frames.size() == 0)
+		if (frames.length == 0)
 			return image.getWidth();
-		return frames.get(0).getWidth();
+		return frames[0].getWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		if (frames.size() == 0)
+		if (frames.length == 0)
 			return image.getHeight();
-		return frames.get(0).getHeight();
-	}
+		return frames[0].getHeight();
+	}  
 
 	@Override
 	public Sprite colour(float rF, float gF, float bF) {
@@ -69,20 +91,20 @@ public class Animation extends Sprite {
 
 	@Override
 	public Sprite copy() {
-		return new Animation(deepCopy(frames));
+		return new Animation(ticksPerFrame, deepCopy(frames));
 	}
 
-	private ArrayList<Sprite> deepCopy(ArrayList<Sprite> frames) {
-		ArrayList<Sprite> newFrames = new ArrayList<Sprite>();
-		for (Sprite sprite : frames) {
-			newFrames.add(sprite.copy());
+	private Sprite[] deepCopy(Sprite[] frames) {
+		Sprite[] newFrames = new Sprite[frames.length];
+		for (int i = 0; i < frames.length; i++) {
+			newFrames[i] = frames[i].copy();
 		}
 		return newFrames;
 	}
 
 	public void nextFrame() {
 		currentFrame++;
-		if (currentFrame >= frames.size()) {
+		if (currentFrame >= frames.length) {
 			currentFrame = 0;
 		}
 	}

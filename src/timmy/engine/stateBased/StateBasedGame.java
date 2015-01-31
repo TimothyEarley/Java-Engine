@@ -69,14 +69,14 @@ public abstract class StateBasedGame extends BasicGame {
 	}
 
 	@Override
-	protected void update(Input input) {
+	protected void update(Input input, int delta) {
 		if (transtioning) {
-			if (transition.update(input)) {
+			if (transition.update(input, delta)) {
 				transtioning = false;
 				enter(transition.getNextState());
 			}
 		} else
-			gs[currentGameState].update(this, input);
+			gs[currentGameState].update(this, input, delta);
 	}
 
 	public void enter(Transition trans) {

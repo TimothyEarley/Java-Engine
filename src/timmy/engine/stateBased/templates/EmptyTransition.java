@@ -16,7 +16,7 @@ public class EmptyTransition extends Transition {
 	}
 
 	@Override
-	public boolean update(Input input) {
+	public boolean update(Input input, int delta) {
 		return true;
 	}
 

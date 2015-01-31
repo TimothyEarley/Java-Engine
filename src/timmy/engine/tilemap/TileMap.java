@@ -2,7 +2,6 @@ package timmy.engine.tilemap;
 
 import java.util.HashMap;
 
-import timmy.engine.games.BasicGame;
 import timmy.engine.graphics.Sprite;
 import timmy.engine.gui.GraphicsHelper;
 import timmy.engine.util.Random;
@@ -12,6 +11,7 @@ public class TileMap {
 
 	private Tile[] tiles;
 	private int width, height, tileWidth, tileHeight;
+	private Sprite sprite;
 
 	public TileMap(String path, HashMap<Integer, Tile[]> tilecolours, int size) {
 		this(path, tilecolours, size, size);
@@ -39,7 +39,32 @@ public class TileMap {
 				}
 			}
 		}
+		
+		sprite = createSprite();
 
+	}
+
+	private Sprite createSprite() {
+		int[] pixels = new int[width * tileHeight * height * tileHeight];
+		
+		for (int xT = 0; xT < width; xT++) {
+			for (int yT = 0; yT < height; yT++) {
+				Tile tile = getTile(xT, yT);
+				Sprite s = tile.getSprite();
+				for (int x = 0; x < tileWidth; x++) {
+					if (s.getWidth() <= x)
+						continue;
+					for (int y = 0; y < tileHeight; y++) {
+						if (s.getWidth() <= y)
+							continue;
+						int col = s.getRGB(x, y);
+						pixels[xT * tileWidth + x + (yT * tileHeight + y) * (width * tileWidth)] = col;
+					}
+				}
+			}
+		}
+		
+		return new Sprite(pixels, width * tileWidth, height * tileHeight);
 	}
 
 	public TileMap(Tile[] tiles, int width, int height) {
@@ -69,9 +94,14 @@ public class TileMap {
 	public int getHeight() {
 		return height;
 	}
+	
+	public void update() {
+		sprite = createSprite();
+	}
 
-	public void render(GraphicsHelper gh, Vector2i offset, BasicGame game) {
+	public void render(GraphicsHelper gh, Vector2i offset, int zoomfactor) {
 
-		// TODO render
+		gh.drawImage(sprite, offset, sprite.getWidth() * zoomfactor, sprite.getHeight() * zoomfactor);
+		
 	}
 }

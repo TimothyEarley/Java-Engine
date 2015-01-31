@@ -34,6 +34,12 @@ public class Sprite {
 	public static int leftToLoad() {
 		return toLoad.size();
 	}
+	
+	/**
+	 * Null constructor
+	 */
+	public Sprite() {
+	}
 
 	/**
 	 * @param res
@@ -46,6 +52,11 @@ public class Sprite {
 		else
 			load();
 
+	}
+	
+	public Sprite(int[] pixels, int w, int h) {
+		this(new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB));
+		image.setRGB(0, 0, w, h, pixels, 0, w);
 	}
 
 	public Sprite(BufferedImage bufferedImage) {
@@ -199,7 +210,7 @@ public class Sprite {
 	}
 
 	public int getRGB(int x, int y) {
-		return image.getRGB(x, y);
+		return getImage().getRGB(x, y);
 	}
 
 	public int[] getPixels() {

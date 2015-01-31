@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import timmy.engine.graphics.Animation;
 import timmy.engine.graphics.Sprite;
 import timmy.engine.gui.Display;
 import timmy.engine.gui.GraphicsHelper;
@@ -17,6 +18,7 @@ import timmy.engine.util.Sound;
 import timmy.engine.util.vectors.Vector2i;
 
 public abstract class BasicGame implements Runnable {
+	public static boolean DEBUG;
 
 	public Display display;
 
@@ -30,11 +32,12 @@ public abstract class BasicGame implements Runnable {
 
 	public double ups;
 
-	long time, delta;
+	long time, sysTime, oldTime, lastUpdateTime;
 
 	Input input;
 
-	boolean alwaysUpdate;
+	boolean alwaysUpdate, alwaysRender;
+
 
 	/**
 	 * In an applet
@@ -102,36 +105,52 @@ public abstract class BasicGame implements Runnable {
 
 	@Override
 	public void run() {
-		delta = 0;
-		time = System.currentTimeMillis();
+		time = 0;
+		sysTime = System.currentTimeMillis();
 		int ticks = 0;
 		int frames = 0;
 
-		int frameCounter = 0;
-		int tickCounter = 0;
-		long deltaCounter = 0;
 
-		long oldDelta = 0;
+		boolean updated;
+		
+		// debug vars:
+		long deltaCounter = 0;
+		int tickCounter = 0;
+		int frameCounter = 0;
+		
+		
 		while (running) {
-			// System.out.println(delta + ", " + getTicks());
-			oldDelta = delta;
-			while (delta == oldDelta) {
-				addDelta();
+			// System.out.println(time + ", " + getTicks());
+			updated = false;
+			oldTime = time;
+			while (time == oldTime) {
+				addTime();
 			}
-			deltaCounter += delta - oldDelta;
+			deltaCounter += time - oldTime;
 			while (ticks < getTicks()) {
-				addDelta();
+				addTime();
 				tryUpdate(input);
 				ticks++;
+				updated = true;
 			}
-			if (frames <= ticks) {
+			if (DEBUG || (updated && frames <= ticks)) {
 				render();
 				frames++;
 			}
+			
+			
+			
 			// debug
 			if (deltaCounter >= 1000) {
 				deltaCounter = 0;
-				display.setTitle("FPS: " + (frames - frameCounter) + ", UPS: " + (ticks - tickCounter) + " (frames: " + frames + ", ticks: " + ticks + ")");
+				if (DEBUG) {
+//					System.out.println("FPS: " + (frames - frameCounter));
+					display.setTitle("FPS: " + (frames - frameCounter) + ", UPS: " + (ticks - tickCounter) + " (frames: " + frames + ", ticks: " + ticks + ")");
+				}
+				// if ups is not reached, reset to avoid trying to overcompensate after lag
+				if (ticks - tickCounter < ups) {
+					ticks = (int) (tickCounter + ups);
+				}
 				frameCounter = frames;
 				tickCounter = ticks;
 			}
@@ -140,25 +159,27 @@ public abstract class BasicGame implements Runnable {
 
 	private void tryUpdate(Input input) {
 		if ((isApplet || display.gh != null) && (alwaysUpdate || input.hasFocus())) {
-			update(input);
+			update(input, (int) (sysTime - lastUpdateTime));
 			input.nextLoop();
+			Animation.tickAll();
 		}
+		lastUpdateTime = sysTime;
 	}
 
 	private int getTicks() {
-		return (int) (delta * ups / 1000);
+		return (int) (time * ups / 1000);
 	}
 
-	private void addDelta() {
+	private void addTime() {
 		long timeNow = System.currentTimeMillis();
-		delta += timeNow - time;
-		time = timeNow;
+		time += timeNow - sysTime;
+		sysTime = timeNow;
 	}
 
 	private void render() {
 		if (isApplet) {
 			applet.repaint();
-		} else if (input.hasFocus()) {
+		} else if (alwaysRender || input.hasFocus()) {
 			display.render(this);
 		}
 	}
@@ -171,7 +192,7 @@ public abstract class BasicGame implements Runnable {
 
 	public abstract void render(BasicGame game, GraphicsHelper gh);
 
-	protected abstract void update(Input input);
+	protected abstract void update(Input input, int delta);
 
 	public Vector2i mouseToScreen(Vector2i v) {
 		if (!isApplet) {
@@ -179,6 +200,10 @@ public abstract class BasicGame implements Runnable {
 		} else {
 			return v;
 		}
+	}
+	
+	public void setAlwaysRender(boolean b) {
+		this.alwaysRender = b;
 	}
 
 	public void setAlwaysUpdate(boolean b) {

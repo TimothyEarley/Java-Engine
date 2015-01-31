@@ -19,7 +19,7 @@ public class Quit extends Transition {
 	}
 
 	@Override
-	public boolean update(Input input) {
+	public boolean update(Input input, int delta) {
 		System.exit(0);
 		return false;
 	}

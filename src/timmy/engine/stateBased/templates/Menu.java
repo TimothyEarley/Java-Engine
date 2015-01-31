@@ -27,7 +27,7 @@ public abstract class Menu extends GameState {
 	}
 
 	@Override
-	public void update(StateBasedGame game, Input input) {
+	public void update(StateBasedGame game, Input input, int delta) {
 		if (btns != null)
 			for (MenuButton btn : btns)
 				btn.update(this, game, input);

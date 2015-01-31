@@ -101,6 +101,10 @@ public class GraphicsHelper {
 	public void setAlpha(float opacity) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
 	}
+	
+	public void drawImage(Sprite sprite, Vector2i loc, int width, int height) {
+		drawImage(sprite, loc.x, loc.y, width, height);
+	}
 
 	public void drawImage(Sprite sprite, int x, int y, Vector2i size) {
 		drawImage(sprite, x, y, size.x, size.y);
