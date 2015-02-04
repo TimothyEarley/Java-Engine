@@ -12,6 +12,8 @@ import timmy.engine.util.Crash;
 
 public class Sprite {
 
+	public static final Sprite VOID = new Sprite(1,1,0);
+
 	public static boolean deferred = false;
 
 	private static ArrayList<Sprite> toLoad = new ArrayList<Sprite>();
@@ -34,7 +36,7 @@ public class Sprite {
 	public static int leftToLoad() {
 		return toLoad.size();
 	}
-	
+
 	/**
 	 * Null constructor
 	 */
@@ -53,7 +55,7 @@ public class Sprite {
 			load();
 
 	}
-	
+
 	public Sprite(int[] pixels, int w, int h) {
 		this(new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB));
 		image.setRGB(0, 0, w, h, pixels, 0, w);
@@ -64,6 +66,9 @@ public class Sprite {
 	}
 
 	public Sprite(int w, int h, int c) {
+		if (w <= 0 || h <= 0) {
+			throw new IllegalArgumentException("Size of Sprite cannot be <= 0.");
+		}
 		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
@@ -197,7 +202,7 @@ public class Sprite {
 	public int getHeight() {
 		return getImage().getHeight();
 	}
-	
+
 	public String getPath() {
 		return res;
 	}
@@ -215,6 +220,10 @@ public class Sprite {
 
 	public int[] getPixels() {
 		return image.getRGB(0, 0, getWidth(), getHeight(), null, 0, getWidth());
+	}
+
+	public void setPixels(int x, int y, Sprite s) {
+		image.setRGB(x, y, s.getWidth(), s.getHeight(), s.getPixels(), 0, s.getWidth());
 	}
 
 }

@@ -4,51 +4,52 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Animation extends Sprite {
-	
+
+	private static final int milisecondsPerFrameDef = 1000;
+
 	/**
 	 * keep track of all anims
 	 */
 	private static ArrayList<Animation> anims = new ArrayList<Animation>();
-	
-	public static void tickAll() {
+
+	public static void tickAll(int delta) {
 		for (Animation animation : anims) {
-			animation.tick();
+			animation.tick(delta);
 		}
 	}
 
 	private Sprite[] frames;
 
-	private int currentFrame, tick, ticksPerFrame;
+	private int currentFrame, delta, milisecondsPerFrame;
 
-	public Animation(String ref, int width, int height, int ticksPerFrame) {
+	public Animation(String ref, int width, int height, int milisecondsPerFrame) {
 
 		super(ref);
 
-		
 		Sprite[] frames = new Sprite[image.getWidth() / width * image.getHeight() * height];
 
 		for (int x = 0; x < image.getWidth(); x += width) {
 			for (int y = 0; y < image.getHeight(); y += height) {
 				frames[x + y * width] = new Sprite(image.getSubimage(x, y, width, height));
 			}
-		} 
-		
-		setup(frames, ticksPerFrame);
+		}
+
+		setup(frames, milisecondsPerFrame);
 
 	}
-	
-	public Animation(Sprite ... frames) {
-		this(20, frames);
+
+	public Animation(Sprite... frames) {
+		this(milisecondsPerFrameDef, frames);
 	}
 
-	public Animation(int ticksPerFrame, Sprite ... frames) {
+	public Animation(int ticksPerFrame, Sprite... frames) {
 		super();
 		setup(frames, ticksPerFrame);
 	}
 
-	private void setup(Sprite[] frames, int ticksPerFrame) {
-		this.ticksPerFrame = ticksPerFrame;
-		this.frames = frames;	
+	private void setup(Sprite[] frames, int milisecondsPerFrame) {
+		this.milisecondsPerFrame = milisecondsPerFrame;
+		this.frames = frames;
 		anims.add(this);
 	}
 
@@ -71,7 +72,7 @@ public class Animation extends Sprite {
 		if (frames.length == 0)
 			return image.getHeight();
 		return frames[0].getHeight();
-	}  
+	}
 
 	@Override
 	public Sprite colour(float rF, float gF, float bF) {
@@ -91,7 +92,7 @@ public class Animation extends Sprite {
 
 	@Override
 	public Sprite copy() {
-		return new Animation(ticksPerFrame, deepCopy(frames));
+		return new Animation(milisecondsPerFrame, deepCopy(frames));
 	}
 
 	private Sprite[] deepCopy(Sprite[] frames) {
@@ -108,13 +109,12 @@ public class Animation extends Sprite {
 			currentFrame = 0;
 		}
 	}
-	
-	public void tick() {
-		tick++;
-		
-		if ( tick > ticksPerFrame) {
+
+	public void tick(int delta) {
+		this.delta += delta;
+		if (this.delta > milisecondsPerFrame) {
 			nextFrame();
-			tick = 0;
+			this.delta = 0;
 		}
 	}
 }

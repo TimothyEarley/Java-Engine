@@ -159,9 +159,10 @@ public abstract class BasicGame implements Runnable {
 
 	private void tryUpdate(Input input) {
 		if ((isApplet || display.gh != null) && (alwaysUpdate || input.hasFocus())) {
-			update(input, (int) (sysTime - lastUpdateTime));
+			int delta = (int) (sysTime - lastUpdateTime);
+			update(input, delta);
 			input.nextLoop();
-			Animation.tickAll();
+			Animation.tickAll(delta);
 		}
 		lastUpdateTime = sysTime;
 	}

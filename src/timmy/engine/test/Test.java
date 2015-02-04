@@ -6,6 +6,7 @@ import timmy.engine.games.BasicGame;
 import timmy.engine.gui.GraphicsHelper;
 import timmy.engine.in.Input;
 import timmy.engine.tilemap.TileMap;
+import timmy.engine.tilemap.entities.Entity;
 import timmy.engine.util.Sound;
 import timmy.engine.util.vectors.Vector2i;
 
@@ -16,6 +17,7 @@ public class Test extends BasicGame {
 	Sound sound;
 	TileMap map;
 	private Vector2i offset = new Vector2i(0, 0);
+	Entity entity;
 
 	public Test(String title) {
 		super(title, 1600, 900);
@@ -29,6 +31,8 @@ public class Test extends BasicGame {
 	protected void init() throws IOException {
 		sound = new Sound("/beep.wav");
 		map = new TileMap("/map.png", Tiles.getColours(), 32);
+		entity = new Entity(new Vector2i(10, 10), map);
+
 		DEBUG = true;
 		ups = 60;
 		setAlwaysRender(true);
@@ -36,9 +40,11 @@ public class Test extends BasicGame {
 
 	@Override
 	public void render(BasicGame game, GraphicsHelper gh) {
-		map.render(gh, offset.copy().mult(-1), 2);
+		map.render(gh, offset, 2);
 		// gh.setColor(Color.RED);
 		// gh.fillRect(20, 10, 200, 100);
+
+		entity.render(gh, offset);
 	}
 
 	@Override
@@ -49,18 +55,19 @@ public class Test extends BasicGame {
 		int speed = delta;
 
 		if (input.keyPressed[KeyEvent.VK_A]) {
-			offset.x -= speed;
-		}
-		if (input.keyPressed[KeyEvent.VK_D]) {
 			offset.x += speed;
 		}
-		if (input.keyPressed[KeyEvent.VK_W]) {
-			offset.y -= speed;
+		if (input.keyPressed[KeyEvent.VK_D]) {
+			offset.x -= speed;
 		}
-		if (input.keyPressed[KeyEvent.VK_S]) {
+		if (input.keyPressed[KeyEvent.VK_W]) {
 			offset.y += speed;
 		}
+		if (input.keyPressed[KeyEvent.VK_S]) {
+			offset.y -= speed;
+		}
 
+		map.update();
 	}
 
 }

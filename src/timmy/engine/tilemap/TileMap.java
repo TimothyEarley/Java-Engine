@@ -9,6 +9,12 @@ import timmy.engine.util.vectors.Vector2i;
 
 public class TileMap {
 
+	/**
+	 * For any mob on the map in pixels
+	 */
+	public float movePrecission = 2;
+	
+	
 	private Tile[] tiles;
 	private int width, height, tileWidth, tileHeight;
 	private Sprite sprite;
@@ -39,14 +45,14 @@ public class TileMap {
 				}
 			}
 		}
-		
+
 		sprite = createSprite();
 
 	}
 
 	private Sprite createSprite() {
 		int[] pixels = new int[width * tileHeight * height * tileHeight];
-		
+
 		for (int xT = 0; xT < width; xT++) {
 			for (int yT = 0; yT < height; yT++) {
 				Tile tile = getTile(xT, yT);
@@ -63,7 +69,6 @@ public class TileMap {
 				}
 			}
 		}
-		
 		return new Sprite(pixels, width * tileWidth, height * tileHeight);
 	}
 
@@ -94,14 +99,14 @@ public class TileMap {
 	public int getHeight() {
 		return height;
 	}
-	
+
 	public void update() {
-		sprite = createSprite();
+		// TODO anims
 	}
 
 	public void render(GraphicsHelper gh, Vector2i offset, int zoomfactor) {
 
 		gh.drawImage(sprite, offset, sprite.getWidth() * zoomfactor, sprite.getHeight() * zoomfactor);
-		
+
 	}
 }
