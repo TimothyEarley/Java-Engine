@@ -2,6 +2,8 @@ package timmy.engine.util.vectors;
 
 import java.io.Serializable;
 
+import timmy.engine.util.StringUtil;
+
 public class Vector2f implements Serializable {
 	private static final long serialVersionUID = 6946630701349833727L;
 	
@@ -36,7 +38,7 @@ public class Vector2f implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[Vector2i: x=" + x + ", y=" + y + "]";
+		return "[" + StringUtil.toDecimal(x, 4, true) + " | " + StringUtil.toDecimal(y, 4, true) + "]";
 	}
 
 	public Vector2f copy() {
