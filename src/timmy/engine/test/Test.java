@@ -60,16 +60,16 @@ public class Test extends BasicGame {
 
 		int speed = delta;
 
-		if (input.keyPressed[KeyEvent.VK_A]) {
+		if (input.isKeyPressed(KeyEvent.VK_A)) {
 			offset.x += speed;
 		}
-		if (input.keyPressed[KeyEvent.VK_D]) {
+		if (input.isKeyPressed(KeyEvent.VK_D)) {
 			offset.x -= speed;
 		}
-		if (input.keyPressed[KeyEvent.VK_W]) {
+		if (input.isKeyPressed(KeyEvent.VK_W)) {
 			offset.y += speed;
 		}
-		if (input.keyPressed[KeyEvent.VK_S]) {
+		if (input.isKeyPressed(KeyEvent.VK_S)) {
 			offset.y -= speed;
 		}
 

@@ -1,14 +1,16 @@
 package timmy.engine.tilemap;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import timmy.engine.graphics.Animation;
 import timmy.engine.graphics.Sprite;
 import timmy.engine.gui.GraphicsHelper;
-import timmy.engine.util.Random;
 import timmy.engine.util.vectors.Vector2i;
 
 public class TileMap {
+	
+	private static Random rand = new Random();
 
 	/**
 	 * For any mob on the map in pixels
@@ -42,7 +44,7 @@ public class TileMap {
 				} else if (newtiles.length == 1) {
 					tiles[x + y * width] = newtiles[0];
 				} else {
-					tiles[x + y * width] = newtiles[Random.rand.nextInt(newtiles.length)];
+					tiles[x + y * width] = newtiles[rand.nextInt(newtiles.length)];
 				}
 			}
 		}
