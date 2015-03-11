@@ -86,17 +86,29 @@ public class Vector2f implements Serializable {
 	}
 	
 	public float length() {
-		return (float) Math.sqrt(this.x * this.x + this.y * this.y);
+		return (float) Math.sqrt(lengthSquare());
+	}
+	
+	public float lengthSquare() {
+		return this.x * this.x + this.y * this.y;
 	}
 	
 	public float distance(Vector2i a) {
-		Vector2f dif = this.copy().sub(a);
-		return dif.length();
+		return (float) Math.sqrt(distanceSquare(a));
 	}
 
 	public float distance(Vector2f a) {
+		return (float) Math.sqrt(distanceSquare(a));
+	}
+	
+	public float distanceSquare(Vector2i a) {
 		Vector2f dif = this.copy().sub(a);
-		return dif.length();
+		return dif.lengthSquare();
+	}
+
+	public float distanceSquare(Vector2f a) {
+		Vector2f dif = this.copy().sub(a);
+		return dif.lengthSquare();
 	}
 	
 	public float dot(Vector2f a) {
