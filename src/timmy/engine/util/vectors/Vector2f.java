@@ -10,6 +10,13 @@ public class Vector2f implements Serializable {
 	
 	public float x, y;
 	
+	/**
+	 * calls Vector2f(0, 0)
+	 */
+	public Vector2f() {
+		this(0,0);
+	}
+	
 	public Vector2f(Vector2i vec) {
 		this(vec.x, vec.y);
 	}
