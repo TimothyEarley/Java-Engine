@@ -15,22 +15,22 @@ import timmy.engine.util.vectors.Vector2f;
 import timmy.engine.util.vectors.Vector2i;
 
 public class GraphicsHelper {
-	
+
 	public static Font font;
 
 	private Graphics2D g2d;
-	
+
 	private Vector2i offset;
 	private Vector2f stretch;
 
 	private Display parent;
-	
+
 	public GraphicsHelper(BufferStrategy bs, Vector2i offset, Vector2f stretch, Display parent) {
 		if (bs != null)
 			this.g2d = (Graphics2D) bs.getDrawGraphics();
 		this.offset = offset;
 		this.stretch = stretch;
-		this.parent = parent;	
+		this.parent = parent;
 	}
 
 	public GraphicsHelper(Graphics2D g2d) {
@@ -104,7 +104,7 @@ public class GraphicsHelper {
 	public void setAlpha(float opacity) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
 	}
-	
+
 	public void drawImage(Sprite sprite, Vector2i loc, int width, int height) {
 		drawImage(sprite, loc.x, loc.y, width, height);
 	}
@@ -173,17 +173,16 @@ public class GraphicsHelper {
 		at.translate(transformX(oldX), transformY(oldY));
 		g2d.drawImage(sprite.getImage(), at, null);
 	}
-	
-	public void drawImage(BufferedImage image) {	
+
+	public void drawImage(BufferedImage image) {
 		drawImage(image, 0, 0);
 	}
 
-
-	public void drawImage(BufferedImage image, int x, int y) {	
+	public void drawImage(BufferedImage image, int x, int y) {
 		drawImage(image, x, y, image.getWidth(), image.getHeight());
 	}
-	
-	public void drawImage(BufferedImage image, int x, int y, int w, int h) {	
+
+	public void drawImage(BufferedImage image, int x, int y, int w, int h) {
 		g2d.drawImage(image, transformX(x), transformY(y), transformW(w), transformH(h), null);
 	}
 
@@ -218,7 +217,7 @@ public class GraphicsHelper {
 
 	public void drawCircle(int x, int y, int radius, int strength) {
 		g2d.setStroke(new BasicStroke(strength));
-		g2d.drawOval(transformX(x), transformY(y), transformW(radius), transformH(radius));
+		g2d.drawOval(transformX(x), transformY(y), transformW(2*radius), transformH(2*radius));
 	}
 
 	public void fillCircle(Vector2f pos, int radius) {
@@ -230,13 +229,20 @@ public class GraphicsHelper {
 	}
 
 	public void fillCircle(int x, int y, int radius) {
-		g2d.fillOval(transformX(x), transformY(y), transformW(radius), transformH(radius));
+		g2d.fillOval(transformX(x), transformY(y), transformW(2*radius), transformH(2*radius));
 	}
-	
+
 	public void drawStringRight(String string, int x, int y, float height) {
 		drawStringRight(string, x, y, font.deriveFont(height));
 	}
 
+	/**
+	 * Draws to the right of x
+	 * @param string
+	 * @param x
+	 * @param y
+	 * @param font
+	 */
 	public void drawStringRight(String string, int x, int y, Font font) {
 		if (string == null || font == null)
 			return;
@@ -247,11 +253,18 @@ public class GraphicsHelper {
 
 		g2d.drawString(string, x, y - height / 2);
 	}
-	
+
 	public void drawStringLeft(String string, int x, int y, float height) {
 		drawStringLeft(string, x, y, font.deriveFont(height));
 	}
 
+	/**
+	 * Draws  to the left of x
+	 * @param string
+	 * @param x
+	 * @param y
+	 * @param font
+	 */
 	public void drawStringLeft(String string, int x, int y, Font font) {
 		if (string == null || font == null)
 			return;
@@ -267,23 +280,39 @@ public class GraphicsHelper {
 	public void drawStringCentered(String string, int x, int y, float height) {
 		drawStringCentered(string, x, y, font.deriveFont(height));
 	}
-	
+
+
+	/**
+	 * Centers the string in x and y direction. Includes line breaks
+	 * @param string
+	 * @param x
+	 * @param y
+	 * @param font
+	 */
 	public void drawStringCentered(String string, int x, int y, Font font) {
 		if (string == null || font == null)
 			return;
+		g2d.setFont(deriveFont(font));
+		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
+		String[] lines = string.split("\n", -1);
+		if (lines.length != 1) {
+			for (int i = 0; i < lines.length; i++) {
+				// convert empty lines to a line with space, so that double \n have an effect
+				drawStringCentered(lines[i].isEmpty() ? " " : lines[i], x, y + (i - lines.length/2) * height, font);
+			}
+			return;
+		}
+
 		x = transformX(x);
 		y = transformY(y);
-		g2d.setFont(deriveFont(font));
 		int lenght = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getWidth();
-		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
-
 		g2d.drawString(string, x - lenght / 2, y - height / 2);
 	}
-	
+
 	public void drawStringCenteredTop(String string, int x, int y, float height) {
 		drawStringCenteredTop(string, x, y, font.deriveFont(height));
 	}
-	
+
 	public void drawStringCenteredTop(String string, int x, int y, Font font) {
 		if (string == null || font == null)
 			return;
@@ -293,7 +322,7 @@ public class GraphicsHelper {
 		int lenght = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getWidth();
 		int height = (int) g2d.getFontMetrics().getStringBounds(string, g2d).getHeight();
 
-		g2d.drawString(string, x - lenght / 2, y + height/2);
+		g2d.drawString(string, x - lenght / 2, y + height / 2);
 	}
 
 	private Font deriveFont(Font font) {
