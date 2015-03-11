@@ -16,12 +16,12 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener, F
 	BasicGame parent;
 	
 	private Vector2i mouse = new Vector2i(-1, -1);
-	public boolean[] keyPressed = new boolean[65535];
-	public boolean[] keyTyped = new boolean[65535];
-	public boolean[] mousePressed = new boolean[4];
-	public boolean[] mouseClicked = new boolean[4];
-	public boolean focus = false;
-	public boolean mouseOver = false;
+	private boolean[] keyPressed = new boolean[65535];
+	private boolean[] keyTyped = new boolean[65535];
+	private boolean[] mousePressed = new boolean[4];
+	private boolean[] mouseClicked = new boolean[4];
+	private boolean focus = false;
+	private boolean mouseOver = false;
 	
 	public Input(BasicGame game) {
 		parent = game;
@@ -32,8 +32,24 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener, F
 		for (int i = 0; i < keyTyped.length; i++) keyTyped[i] = false;
 	}
 	
+	public Vector2i getRawMouse(){
+		return mouse.copy();
+	}
+	
 	public Vector2i getMouse(){
 		return parent.mouseToScreen(mouse.copy());
+	}
+	
+	public boolean isKeyPressed(int i) {
+		if (i < 0 || i > 65535)
+			return false;
+		return keyPressed[i];
+	}
+	
+	public boolean isKeyTyped(int i) {
+		if (i < 0 || i > 65535)
+			return false;
+		return keyTyped[i];
 	}
 
 	public boolean isMouseDown(int i) {
@@ -109,6 +125,10 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener, F
 	@Override
 	public void keyTyped(KeyEvent e) {
 		keyTyped[e.getKeyCode()] = true;
+	}
+
+	public boolean isMouseOver() {
+		return mouseOver;
 	}
 
 
