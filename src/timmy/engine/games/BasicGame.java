@@ -22,7 +22,7 @@ public abstract class BasicGame implements Runnable {
 
 	public Display display;
 
-	public final static int defWidth = 640, defHeight = 360;
+	public final static int defWidth = 640, defHeight = 360, defUPS = 30;
 
 	Thread run;
 
@@ -45,21 +45,17 @@ public abstract class BasicGame implements Runnable {
 	 * @param applet
 	 */
 	public BasicGame(Applet applet, int width, int height) {
+		setup();
 		this.applet = applet;
 		setUpApplet(width, height);
 		isApplet = true;
 		// Pseudo display
 		display = new Display(width, height);
 
-		run = new Thread(this, "run");
-		running = false;
-		ups = 30;
-		input = new Input(this);
 		applet.addKeyListener(input);
 		applet.addMouseListener(input);
 		applet.addMouseMotionListener(input);
 		applet.addFocusListener(input);
-		alwaysUpdate = true;
 	}
 
 	private void setUpApplet(int width, int height) {
@@ -71,16 +67,21 @@ public abstract class BasicGame implements Runnable {
 	}
 
 	public BasicGame(String title, int width, int height) {
+		setup();
 		display = new Display(title, width, height, true);
-		run = new Thread(this, "run");
-		running = false;
-		ups = 30;
-		input = new Input(this);
 		display.addKeyListener(input);
 		display.addMouseListener(input);
 		display.addMouseMotionListener(input);
 		display.addFocusListener(input);
+	}
+	
+	public void setup() {
+		ups = defUPS;
+		running = false;
+		input = new Input(this);
+		run = new Thread(this, "run");
 		alwaysUpdate = true;
+		GraphicsHelper.font = new Font("Verdana", Font.PLAIN, 50);
 	}
 
 	public void start() {

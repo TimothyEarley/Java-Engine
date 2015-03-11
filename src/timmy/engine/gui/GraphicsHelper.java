@@ -45,10 +45,13 @@ public class GraphicsHelper {
 	public void clearSides() {
 		setColor(Display.backgroundColor);
 		if (parent != null) {
-			g2d.fillRect(-1, 0, offset.x + 1, transformH(parent.size.y));
-			g2d.fillRect(transformW(parent.size.x) + offset.x, 0, offset.x + 10, transformH(parent.size.y));
-
+			// left edge
+			g2d.fillRect(-1, 0, offset.x + 1, (int) (1.1f * transformH(parent.size.y)));
+			// right edge
+			g2d.fillRect(transformW(parent.size.x) + offset.x, 0, offset.x + 10, (int) (1.1f * transformH(parent.size.y)));
+			// top edge
 			g2d.fillRect(0, -1, transformW(parent.size.x), offset.y + 1);
+			// bottom edge
 			g2d.fillRect(0, transformH(parent.size.y) + offset.y, transformW(parent.size.x), offset.y + 10);
 		}
 	}

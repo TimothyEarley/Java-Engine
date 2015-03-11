@@ -2,6 +2,7 @@ package timmy.engine.tilemap;
 
 import java.util.HashMap;
 
+import timmy.engine.graphics.Animation;
 import timmy.engine.graphics.Sprite;
 import timmy.engine.gui.GraphicsHelper;
 import timmy.engine.util.Random;
@@ -13,11 +14,11 @@ public class TileMap {
 	 * For any mob on the map in pixels
 	 */
 	public float movePrecission = 2;
-	
-	
+
 	private Tile[] tiles;
 	private int width, height, tileWidth, tileHeight;
 	private Sprite sprite;
+	private boolean spriteCreatorIsRunning;
 
 	public TileMap(String path, HashMap<Integer, Tile[]> tilecolours, int size) {
 		this(path, tilecolours, size, size);
@@ -46,11 +47,28 @@ public class TileMap {
 			}
 		}
 
-		sprite = createSprite();
+		spriteCreatorIsRunning = false;
+		sprite = createSprite(false);
 
 	}
 
-	private Sprite createSprite() {
+	private Sprite createSprite(boolean thread) {
+		if (spriteCreatorIsRunning)
+			return sprite;
+		// Run in new thread if not important
+		if (thread) {
+			Thread spriteCreator = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					sprite = createSprite(false);
+				}
+			}, "Sprite Creator");
+			spriteCreator.start();
+			return sprite;
+		}
+
+		spriteCreatorIsRunning = true;
+
 		int[] pixels = new int[width * tileHeight * height * tileHeight];
 
 		for (int xT = 0; xT < width; xT++) {
@@ -69,6 +87,7 @@ public class TileMap {
 				}
 			}
 		}
+		spriteCreatorIsRunning = false;
 		return new Sprite(pixels, width * tileWidth, height * tileHeight);
 	}
 
@@ -99,9 +118,19 @@ public class TileMap {
 	public int getHeight() {
 		return height;
 	}
+	
+	public int getTileWidth() {
+		return tileWidth;
+	}
+
+	public int getTileHeight() {
+		return tileHeight;
+	}
 
 	public void update() {
-		// TODO anims
+		if (Animation.updated) {
+			sprite = createSprite(true);
+		}
 	}
 
 	public void render(GraphicsHelper gh, Vector2i offset, int zoomfactor) {

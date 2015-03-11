@@ -2,6 +2,9 @@ package timmy.engine.tilemap;
 
 import timmy.engine.graphics.Sprite;
 
+/**
+ * Describes how a tile _looks_, not where it is. (STATIC)
+ */
 public class Tile {
 
 	public static int BREAKABLE = 0x0;

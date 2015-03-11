@@ -5,14 +5,17 @@ import java.util.ArrayList;
 
 public class Animation extends Sprite {
 
-	private static final int milisecondsPerFrameDef = 1000;
+	private static final int milisecondsPerFrameDef = 500;
 
 	/**
 	 * keep track of all anims
 	 */
 	private static ArrayList<Animation> anims = new ArrayList<Animation>();
 
+	public static boolean updated;
+
 	public static void tickAll(int delta) {
+		updated = false;
 		for (Animation animation : anims) {
 			animation.tick(delta);
 		}
@@ -112,7 +115,8 @@ public class Animation extends Sprite {
 
 	public void tick(int delta) {
 		this.delta += delta;
-		if (this.delta > milisecondsPerFrame) {
+		if (this.delta / milisecondsPerFrame != 0) {
+			updated = true;
 			nextFrame();
 			this.delta = 0;
 		}
