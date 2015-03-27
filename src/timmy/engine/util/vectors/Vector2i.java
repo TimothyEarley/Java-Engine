@@ -56,7 +56,11 @@ public class Vector2i {
 		return this;
 	}
 	
-	
+	public Vector2i sub(int dx, int dy) {
+		subX(dx);
+		subY(dy);
+		return this;
+	}
 	
 	public Vector2i mult(double a) {
 		x *= a;
@@ -103,4 +107,5 @@ public class Vector2i {
 	public float getAngleTo(Vector2i b) {
 		return (float) (Math.atan2(this.x, this.y) - Math.atan2(b.x, b.y));
 	}
+	
 }
