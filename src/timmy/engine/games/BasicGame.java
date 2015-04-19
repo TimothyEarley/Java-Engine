@@ -42,7 +42,7 @@ public abstract class BasicGame implements Runnable {
 	/**
 	 * In an applet
 	 * 
-	 * @param applet
+	 * @param applet The applet this is running in
 	 */
 	public BasicGame(Applet applet, int width, int height) {
 		setup();

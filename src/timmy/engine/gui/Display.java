@@ -36,8 +36,6 @@ public class Display extends JFrame {
 	/**
 	 * Pseudo screen for applet
 	 * 
-	 * @param width
-	 * @param height
 	 */
 	public Display(int width, int height) {
 		size = new Vector2i(width, height);
@@ -100,8 +98,6 @@ public class Display extends JFrame {
 
 	/**
 	 * Never look at this again, but it works ;)
-	 * 
-	 * @param window
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void enableOSXFullscreen(Window window) {

@@ -15,8 +15,6 @@ public abstract class Transition {
 
 	/**
 	 * 
-	 * @param input
-	 * @param delta 
 	 * @return if ready to move on
 	 */
 	abstract public boolean update(Input input, int delta);

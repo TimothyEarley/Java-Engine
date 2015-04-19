@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -215,6 +216,15 @@ public class GraphicsHelper {
 	public void drawLine(Vector2i a, Vector2i b) {
 		g2d.drawLine(transformX(a.x), transformY(a.y), transformX(b.x), transformY(b.y));
 	}
+	
+	public void drawLine(Vector2i a, Vector2i b, int strength) {
+		Stroke s = g2d.getStroke();
+		g2d.setStroke(new BasicStroke(strength));
+		g2d.drawLine(transformX(a.x), transformY(a.y), transformX(b.x), transformY(b.y));
+		g2d.setStroke(s);
+	}
+	
+	
 
 	public void drawCircle(int x, int y, int radius, int strength) {
 		g2d.setStroke(new BasicStroke(strength));
@@ -239,10 +249,6 @@ public class GraphicsHelper {
 
 	/**
 	 * Draws to the right of x
-	 * @param string
-	 * @param x
-	 * @param y
-	 * @param font
 	 */
 	public void drawStringRight(String string, int x, int y, Font font) {
 		if (string == null || font == null)
@@ -261,10 +267,6 @@ public class GraphicsHelper {
 
 	/**
 	 * Draws  to the left of x
-	 * @param string
-	 * @param x
-	 * @param y
-	 * @param font
 	 */
 	public void drawStringLeft(String string, int x, int y, Font font) {
 		if (string == null || font == null)
@@ -285,10 +287,6 @@ public class GraphicsHelper {
 
 	/**
 	 * Centers the string in x and y direction. Includes line breaks
-	 * @param string
-	 * @param x
-	 * @param y
-	 * @param font
 	 */
 	public void drawStringCentered(String string, int x, int y, Font font) {
 		if (string == null || font == null)

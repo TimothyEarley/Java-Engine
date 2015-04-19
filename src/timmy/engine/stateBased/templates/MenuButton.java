@@ -20,11 +20,6 @@ public class MenuButton {
 	/**
 	 * With action
 	 * 
-	 * @param img
-	 * @param imgOver
-	 * @param x
-	 * @param y
-	 * @param action
 	 */
 	public MenuButton(String img, String imgOver, int x, int y, Action action) {
 		this(new Sprite(img), new Sprite(imgOver), x, y, action);
@@ -33,11 +28,6 @@ public class MenuButton {
 	/**
 	 * With action
 	 * 
-	 * @param img
-	 * @param imgOver
-	 * @param x
-	 * @param y
-	 * @param action
 	 */
 	public MenuButton(Sprite img, Sprite imgOver, int x, int y, Action action) {
 		this(img, imgOver, x, y);
@@ -61,11 +51,6 @@ public class MenuButton {
 	/**
 	 * Main constructor + leave Transition
 	 * 
-	 * @param img
-	 * @param imgOver
-	 * @param x
-	 * @param y
-	 * @param leave
 	 */
 	public MenuButton(Sprite img, Sprite imgOver, int x, int y, Transition leave) {
 		this(img, imgOver, x, y);
@@ -75,10 +60,6 @@ public class MenuButton {
 	/**
 	 * Main constructor
 	 * 
-	 * @param img
-	 * @param imgOver
-	 * @param x
-	 * @param y
 	 */
 	public MenuButton(Sprite img, Sprite imgOver, int x, int y) {
 		this.image = img;
