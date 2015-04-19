@@ -9,4 +9,8 @@ public abstract class Shape {
 	public Vector2f pos;
 	public abstract void render(Vector2f offset, GraphicsHelper gh);
 	
+	public void render(GraphicsHelper gh) {
+		render(new Vector2f(), gh);
+	}
+	
 }

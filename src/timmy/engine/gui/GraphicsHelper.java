@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
+import timmy.engine.geometry.Shape;
 import timmy.engine.graphics.Sprite;
 import timmy.engine.util.vectors.Vector2f;
 import timmy.engine.util.vectors.Vector2i;
@@ -340,6 +341,10 @@ public class GraphicsHelper {
 
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
 		g2d.fillArc(transformX(x), transformY(y), transformW(width), transformH(height), startAngle, arcAngle);
+	}
+	
+	public void fillShape(Shape s) {
+		s.render(this);
 	}
 
 }
