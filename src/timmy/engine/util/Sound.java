@@ -77,7 +77,7 @@ public class Sound {
 	 * erstellt einen neuen clip
 	 * 
 	 * @return einen neuen clip
-	 * @throws LineUnavailableException
+	 * @throws LineUnavailableException {@link javax.sound.sampled.AudioSystem#getClip()}
 	 */
 	private Clip getClip() throws LineUnavailableException {
 		if (big) {
